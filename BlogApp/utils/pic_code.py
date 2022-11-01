@@ -1,6 +1,7 @@
 from PIL import Image, ImageDraw, ImageFont
 import string
 import random
+from io import BytesIO
 
 from pip import main
 
@@ -19,8 +20,7 @@ def random_code():
     draw = ImageDraw.Draw(img)
 
     # 生成字体对象
-    font = ImageFont.truetype(
-        font="MyBlog/BlogApp/utils/font/212_Saint_Paddy.ttf", size=32)
+    font = ImageFont.truetype(font="static/my/font/212_Saint_Paddy.ttf", size=32)
 
     # 书写文字
     volid_code = ""
@@ -29,7 +29,6 @@ def random_code():
         random_char = random.choice(str_all)
         draw.text((40*i+20, 5), random_char, (0, 0, 0), font=font)
         volid_code += random_char
-    print(volid_code)
 
     # 验证码图片混淆 
     for i in range(80):
@@ -43,7 +42,15 @@ def random_code():
         x2,y2 = random.randint(0,width), random.randint(0,height)
         draw.line((x1,y1,x2,y2), random_color())
 
-    img.save(r'MyBlog/BlogApp/utils/code_pic/code.png', "PNG")
+    # 创建内存句柄
+    f = BytesIO()
+    
+    # 将图片保存内存句柄中
+
+    img.save(f, "PNG")
+
+    # 读取内存句柄
+    data = f.getvalue()
 
 if __name__ == "__main__":
     random_code()
